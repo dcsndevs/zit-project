@@ -1,38 +1,41 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
-import 'product_list_screen.dart';
-import 'register_screen.dart';
+import 'login_screen.dart';
 
-
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _apiService = ApiService();
   bool _isLoading = false;
 
-  void _login() async {
+  void _register() async {
     setState(() => _isLoading = true);
-    final success = await _apiService.login(
+    final success = await _apiService.register(
       _usernameController.text,
       _passwordController.text,
+      _emailController.text,
     );
     setState(() => _isLoading = false);
 
     if (success && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Your Account has been created. You can now login.')),
+      );
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const ProductListScreen()),
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login failed')),
+        const SnackBar(content: Text('Registration failed')),
       );
     }
   }
@@ -40,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('ZIT Login')),
+      appBar: AppBar(title: const Text('Register')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -52,6 +55,11 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 16),
             TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(labelText: 'Email'),
+            ),
+            const SizedBox(height: 16),
+            TextField(
               controller: _passwordController,
               decoration: const InputDecoration(labelText: 'Password'),
               obscureText: true,
@@ -60,15 +68,15 @@ class _LoginScreenState extends State<LoginScreen> {
             _isLoading
                 ? const CircularProgressIndicator()
                 : ElevatedButton(
-                    onPressed: _login,
-                    child: const Text('Login'),
+                    onPressed: _register,
+                    child: const Text('Register'),
                   ),
             TextButton(
               onPressed: () => Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
               ),
-              child: const Text("Don't have an account? Register"),
+              child: const Text('Already have an account? Login'),
             ),
           ],
         ),

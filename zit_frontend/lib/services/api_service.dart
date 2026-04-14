@@ -24,6 +24,15 @@ class ApiService {
     return false;
   }
 
+  Future<bool> register(String username, String password, String email) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/register/'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'username': username, 'password': password, 'email': email}),
+    );
+    return response.statusCode == 201;
+  }
+
   Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('access_token');

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../widgets/zit_app_bar.dart';
+//import 'login_screen.dart';
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});
@@ -22,6 +24,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
   void _loadProducts() async {
     try {
       final products = await _apiService.getProducts();
+      print(products); //print
       setState(() {
         _products = products;
         _isLoading = false;
@@ -37,7 +40,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Products')),
+      //appBar: AppBar(title: const Text('Catalogue')),
+      appBar: const ZitAppBar(title: ''),
+
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
@@ -45,11 +50,22 @@ class _ProductListScreenState extends State<ProductListScreen> {
               itemBuilder: (context, index) {
                 final product = _products[index];
                 return ListTile(
+                  leading: product['image_url'] != null && product['image_url'] != ''
+                      ? Image.network(
+                          product['image_url'],
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(Icons.image_not_supported),
+                        )
+                      : const Icon(Icons.image_not_supported),
                   title: Text(product['name']),
                   subtitle: Text(product['description']),
                   trailing: Text('\€${product['price']}'),
                 );
               },
+
             ),
     );
   }
