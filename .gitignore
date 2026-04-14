@@ -1,4 +1,5 @@
 notes.md
+zit_backend/zit_backend/settings.py
 
 # Python / Django
 venv/
@@ -25,3 +26,11 @@ build/
 .idea/
 *.swp
 Thumbs.db
+
+zit_frontend/android/
+zit_frontend/ios/
+zit_frontend/web/
+zit_frontend/linux/
+zit_frontend/macos/
+zit_frontend/windows/
+zit_frontend/test/
