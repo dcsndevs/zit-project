@@ -90,4 +90,36 @@ class ApiService {
     }
     throw Exception('Failed to create order');
   }
+  Future<Map<String, dynamic>> createOrderWithDetails({
+    required double totalPrice,
+    required List<Map<String, dynamic>> items,
+    required String customerName,
+    required String phone,
+    required String email,
+    required String address,
+    String? token,
+  }) async {
+    final headers = {'Content-Type': 'application/json'};
+    if (token != null) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/orders/'),
+      headers: headers,
+      body: jsonEncode({
+        'total_price': totalPrice,
+        'items': items,
+        'customer_name': customerName,
+        'phone': phone,
+        'email': email,
+        'address': address,
+      }),
+    );
+    if (response.statusCode == 201) {
+      return jsonDecode(response.body);
+    }
+    throw Exception('Failed to place order');
+  }
+
 }

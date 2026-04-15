@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../widgets/zit_app_bar.dart';
-//import 'login_screen.dart';
+import 'checkout_screen.dart';
+
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});
@@ -41,7 +42,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       //appBar: AppBar(title: const Text('Catalogue')),
-      appBar: const ZitAppBar(title: ''),
+      appBar: const ZitAppBar(title: 'All Products'),
 
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -49,21 +50,49 @@ class _ProductListScreenState extends State<ProductListScreen> {
               itemCount: _products.length,
               itemBuilder: (context, index) {
                 final product = _products[index];
-                return ListTile(
-                  leading: product['image_url'] != null && product['image_url'] != ''
-                      ? Image.network(
-                          product['image_url'],
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(Icons.image_not_supported),
-                        )
-                      : const Icon(Icons.image_not_supported),
-                  title: Text(product['name']),
-                  subtitle: Text(product['description']),
-                  trailing: Text('\€${product['price']}'),
+                return Card(
+                  margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  child: ListTile(
+                    leading: product['image_url'] != null && product['image_url'] != ''
+                        ? Image.network(
+                            product['image_url'],
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.image_not_supported),
+                          )
+                        : const Icon(Icons.image_not_supported),
+                    title: Text(product['name']),
+                    subtitle: Text(product['description']),
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('\₦${product['price']}'),
+                        const SizedBox(height: 4),
+                        SizedBox(
+                          height: 24,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => CheckoutScreen(product: product),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              textStyle: const TextStyle(fontSize: 11),
+                            ),
+                            child: const Text('Buy'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 );
+
               },
 
             ),

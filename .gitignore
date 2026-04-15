@@ -1,5 +1,6 @@
 notes.md
 zit_backend/zit_backend/settings.py
+zit_backend/zit_backend/pythonanywhere_settings.py
 
 # Python / Django
 venv/
