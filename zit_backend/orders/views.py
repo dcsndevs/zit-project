@@ -2,6 +2,7 @@ from rest_framework import generics
 from .models import Order
 from .serializers import OrderSerializer
 from rest_framework.permissions import AllowAny
+from .emails import send_order_emails
 
 
 class OrderListCreateView(generics.ListCreateAPIView):
@@ -11,6 +12,10 @@ class OrderListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         if self.request.user.is_authenticated:
-            serializer.save(user=self.request.user)
+            order = serializer.save(user=self.request.user)
         else:
-            serializer.save()
+            order = serializer.save()
+
+        order_items = order.items.all()
+        send_order_emails(order, order_items)
+
