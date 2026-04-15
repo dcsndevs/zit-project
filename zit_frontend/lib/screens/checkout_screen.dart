@@ -54,7 +54,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Order placed successfully!')),
+          const SnackBar(content: Text('Order placed successfully and email sent!')),
         );
         Navigator.pop(context);
       }
@@ -78,7 +78,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             Text(widget.product['name'],
                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text('\₦${widget.product['price']} each'),
+            Text('₦${int.parse(double.parse(widget.product['price'].toString()).round().toString()).toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+$)'), (m) => '${m[1]},')} each'),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -96,7 +96,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
               ],
             ),
-            Text('Total: \₦${_totalPrice.toStringAsFixed(2)}',
+            Text('Total: ₦${_totalPrice.round().toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+$)'), (m) => '${m[1]},')}',
                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 24),
             TextField(

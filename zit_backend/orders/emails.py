@@ -15,7 +15,7 @@ def send_order_emails(order, items):
         f"Thank you for your order!\n\n"
         f"Order Number: {f"ZIT{order.id:04d}"}\n"
         f"Items:\n{item_lines}\n"
-        f"Total: ₦{order.total_price}\n\n"
+f"Total: ₦{order.total_price:,.0f}\n\n"
         f"This is a Pay On Delivery order. We will deliver to:\n{order.address}\n\n"
         f"Thank you for shopping with ZIT!"
     )
@@ -38,7 +38,7 @@ def send_order_emails(order, items):
         f"Email: {order.email}\n"
         f"Address: {order.address}\n\n"
         f"Items:\n{item_lines}\n"
-        f"Total: ₦{order.total_price}"
+        f"Total: ₦{order.total_price:,.0f}"
     )
 
     send_mail(

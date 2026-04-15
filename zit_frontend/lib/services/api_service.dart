@@ -121,5 +121,18 @@ class ApiService {
     }
     throw Exception('Failed to place order');
   }
+  Future<Map<String, dynamic>> getProfile(String token) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/profile/'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    throw Exception('Failed to load profile');
+  }
 
 }

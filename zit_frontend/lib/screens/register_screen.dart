@@ -17,7 +17,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _isLoading = false;
 
   void _register() async {
-    setState(() => _isLoading = true);
+      if (_usernameController.text.isEmpty ||
+          _emailController.text.isEmpty ||
+          _passwordController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('All fields are required')),
+        );
+        return;
+      }
+      if (!_emailController.text.contains('@') || !_emailController.text.contains('.')) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter a valid email address')),
+        );
+        return;
+      }
+
+      setState(() => _isLoading = true);
+
     final success = await _apiService.register(
       _usernameController.text,
       _passwordController.text,
@@ -62,6 +78,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             TextField(
               controller: _passwordController,
               decoration: const InputDecoration(labelText: 'Password'),
+              keyboardType: TextInputType.emailAddress,
               obscureText: true,
             ),
             const SizedBox(height: 24),

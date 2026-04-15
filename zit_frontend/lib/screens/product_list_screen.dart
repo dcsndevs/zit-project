@@ -54,40 +54,60 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   child: ListTile(
                     leading: product['image_url'] != null && product['image_url'] != ''
-                        ? Image.network(
-                            product['image_url'],
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Icon(Icons.image_not_supported),
+                        ? GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (_) => Dialog(
+                                  child: Image.network(
+                                    product['image_url'],
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Image.network(
+                              product['image_url'],
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.image_not_supported),
+                            ),
                           )
                         : const Icon(Icons.image_not_supported),
+
                     title: Text(product['name']),
                     subtitle: Text(product['description']),
                     trailing: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('\₦${product['price']}'),
+                        Text('₦${int.parse(double.parse(product['price'].toString()).round().toString()).toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+$)'), (m) => '${m[1]},')}'),
                         const SizedBox(height: 4),
                         SizedBox(
                           height: 24,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => CheckoutScreen(product: product),
+                          child: product['stock'] != null && product['stock'] > 0
+                              ? ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => CheckoutScreen(product: product),
+                                      ),
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                                    textStyle: const TextStyle(fontSize: 11),
+                                  ),
+                                  child: const Text('Buy'),
+                                )
+                              : const Text(
+                                  'Out of Stock',
+                                  style: TextStyle(color: Colors.red, fontSize: 11),
                                 ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
-                              textStyle: const TextStyle(fontSize: 11),
-                            ),
-                            child: const Text('Buy'),
-                          ),
                         ),
+
                       ],
                     ),
                   ),
