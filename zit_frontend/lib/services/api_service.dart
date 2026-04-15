@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiService {
 
   // static const String baseUrl = 'http://127.0.0.1:8000/api';
-  static const String baseUrl = 'http://dcsn.eu.pythonanywhere.com/api';
+  static const String baseUrl = 'https://dcsn.eu.pythonanywhere.com/api';
   // --- AUTH ---
   Future<bool> login(String username, String password) async {
     final response = await http.post(
